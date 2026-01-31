@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Forever With You 💖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Poppins,sans-serif;
+      background:linear-gradient(135deg,#ffd6e8,#fff1f7);
+      text-align:center;
+      overflow:hidden;
+    }
+    section{display:none;min-height:100vh;padding:70px 20px}
+    section.active{display:block}
+    h1{font-family:Pacifico;color:#d6336c;font-size:2.8rem;margin-bottom:25px}
+    h2{color:#a61e4d;margin-bottom:20px}
+    p{font-size:1.1rem;margin-bottom:25px}
+    button{
+      padding:14px 40px;
+      border:none;
+      border-radius:30px;
+      background:linear-gradient(135deg,#ff6b9c,#f06595);
+      color:white;
+      font-size:1.05rem;
+      cursor:pointer;
+      margin:10px;
+    }
+    button.option{background:#ffd6e8;color:#a61e4d}
+    button:hover{transform:scale(1.05)}
+    input{padding:12px 20px;border-radius:20px;border:1px solid #ffc2d1;font-size:1rem}
+    .no{
+      position:absolute;
+      background:#ffd6e8;
+      color:#a61e4d;
+      pointer-events:none;
+    }
+    .heart{
+      position:fixed;
+      bottom:-20px;
+      font-size:20px;
+      animation:floatUp 6s linear forwards;
+    }
+    @keyframes floatUp{
+      to{transform:translateY(-120vh);opacity:0}
+    }
+    canvas{position:fixed;top:0;left:0;pointer-events:none}
+  </style>
+</head>
+<body>
+
+<audio autoplay loop src="music.mp3"></audio>
+<canvas id="confetti"></canvas>
+
+<!-- HOME -->
+<section id="home" class="active">
+  <h1>Hey fuchhe 💕</h1>
+  <p>I made something just for you. Take it slow 🥹</p>
+  <button onclick="go('quiz1')">Start ➝</button>
+</section>
+
+<!-- QUIZ 1 -->
+<section id="quiz1">
+  <h2>How long has it been since we started dating? 💭</h2>
+  <input id="datingAnswer" placeholder="Type your answer here">
+  <br><br>
+  <button onclick="saveAndNext()">Continue ➝</button>
+</section>
+
+<!-- QUIZ 2 -->
+<section id="quiz2">
+  <h2>Do you think we are perfect for each other? 😌</h2>
+  <button class="option" onclick="go('quiz3')">Yes</button>
+  <button class="option" onclick="go('quiz3')">Duh</button>
+  <button class="option" onclick="go('quiz3')">Heck yeah</button>
+</section>
+
+<!-- QUIZ 3 -->
+<section id="quiz3">
+  <h2>Wanna be my forever? 💍</h2>
+  <button class="option" onclick="go('final')">YES</button>
+  <button class="option" onclick="go('final')">YES</button>
+  <button class="option" onclick="go('final')">YESSSS</button>
+</section>
+
+<!-- FINAL -->
+<section id="final">
+  <h1>fuchhe, chinte, babe 💖</h1>
+  <p>Will you be my Valentine… and my always?</p>
+  <button onclick="yesClicked()">YES 💕</button>
+  <button class="no" id="noBtn">No 🙃</button>
+</section>
+
+<!-- END -->
+<section id="end">
+  <h1>Congrats 🥹💖</h1>
+  <p>You’re stuck with me now. Screenshot this. I’m keeping you.</p>
+</section>
+
+<script>
+  function go(id){
+    document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+  function saveAndNext(){
+    localStorage.setItem('datingAnswer', document.getElementById('datingAnswer').value);
+    go('quiz2');
+  }
+
+  // NO button impossible
+  const noBtn = document.getElementById('noBtn');
+  noBtn.style.left='60%';noBtn.style.top='70%';
+  setInterval(()=>{
+    noBtn.style.left=Math.random()*80+'%';
+    noBtn.style.top=Math.random()*80+'%';
+  },500);
+
+  // Floating hearts
+  setInterval(()=>{
+    const h=document.createElement('div');
+    h.className='heart';
+    h.innerText='💖';
+    h.style.left=Math.random()*100+'%';
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
+  },700);
+
+  // Confetti
+  const canvas=document.getElementById('confetti');
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  let pieces=[];
+  function yesClicked(){
+    for(let i=0;i<200;i++){
+      pieces.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:Math.random()*4-2,vy:Math.random()*4+2});
+    }
+    animate();
+    setTimeout(()=>go('end'),1500);
+  }
+  function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      ctx.fillStyle='rgba(255,105,180,0.8)';
+      ctx.fillRect(p.x,p.y,5,5);
+      p.x+=p.vx;p.y+=p.vy;
+    });
+    requestAnimationFrame(animate);
+  }
+</script>
+
+</body>
+</html>
